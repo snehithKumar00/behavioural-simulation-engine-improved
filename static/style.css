@@ -1,0 +1,70 @@
+body { 
+    background: #05070a; 
+    color: #ffffff; 
+    font-family: 'Segoe UI', sans-serif; 
+}
+.card { 
+    background: #0d1117 !important; 
+    border: 1px solid #30363d !important; 
+    border-radius: 12px; 
+}
+
+label, .text-label { 
+    color: #ffffff !important; 
+    font-weight: 600; font-size: 0.85rem; 
+    margin-bottom: 5px; 
+    display: block; 
+}
+
+.text-info { 
+    color: #00d4ff !important; 
+}
+
+.text-danger { 
+    color: #f85149 !important; 
+}
+
+.report-section { 
+    background: #010409; 
+    border: 1px dashed #30363d; 
+    border-radius: 8px; 
+    padding: 20px; 
+    margin-bottom: 25px; 
+}
+
+.report-img { 
+    width: 100%;
+    max-width: 800px; 
+    display: block; 
+    margin: 0 auto; 
+    border-radius: 6px; 
+}
+.insight-box { 
+    background: #161b22; 
+    border-left: 4px solid #00d4ff; 
+    padding: 15px; margin-top: 15px; 
+    border-radius: 4px; 
+    font-size: 0.95rem; 
+    color: #c9d1d9; 
+}
+
+input[type=range] { 
+    margin-bottom: 20px; 
+    cursor: pointer; 
+}
+
+.stat-card h2 { 
+    font-weight: 800; 
+    margin-top: 5px; 
+}
+
+.btn-primary { 
+    background-color: #1f6feb; 
+    border: none; 
+    transition: 0.2s ease; 
+}
+
+.btn-primary:hover { 
+    background-color: #388bfd; 
+    transform: translateY(-2px); 
+}

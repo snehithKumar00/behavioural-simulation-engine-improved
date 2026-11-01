@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RPG Behavioral Sim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container-fluid p-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold"><span class="text-info">🎮</span> BEHAVIORAL SIM-ENGINE</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card p-4 shadow-sm position-sticky" style="top: 20px;">
+                <h6 class="text-info fw-bold mb-4 small text-uppercase">System Configuration</h6>
+                
+                <div class="mb-3">
+                    <label>Initial Difficulty: <span id="val_difficulty" class="badge bg-primary text-white float-end">40</span></label>
+                    <input type="range" class="form-range" id="difficulty" min="10" max="100" value="40">
+                </div>
+                
+                <div class="mb-3">
+                    <label>Difficulty Growth: <span id="val_difficulty_growth" class="badge bg-primary text-white float-end">0.8</span></label>
+                    <input type="range" class="form-range" id="difficulty_growth" min="0" max="5" step="0.1" value="0.8">
+                </div>
+                
+                <div class="mb-3">
+                    <label>Reward Amount: <span id="val_reward_amount" class="badge bg-primary text-white float-end">70</span></label>
+                    <input type="range" class="form-range" id="reward_amount" min="1" max="100" value="70">
+                </div>
+                
+                <div class="mb-3">
+                    <label>Failure Penalty: <span id="val_penalty_on_failure" class="badge bg-primary text-white float-end">1.0</span></label>
+                    <input type="range" class="form-range" id="penalty_on_failure" min="1" max="5" step="0.5" value="1.0">
+                </div>
+                
+                <hr class="border-secondary my-4">
+                
+                <div class="mb-4">
+                    <label>Agent Population: <span id="val_num_players" class="badge bg-primary text-white float-end">1000</span></label>
+                    <input type="range" class="form-range" id="num_players" min="100" max="2000" step="100" value="1000">
+                </div>
+                
+                <button id="runBtn" class="btn btn-primary w-100 fw-bold py-2">RUN SYSTEM TEST</button>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card p-4 shadow-sm h-100">
+                <div class="row text-center mb-4 stat-card">
+                    <div class="col-4 border-end border-secondary">
+                        <span class="text-label">RETENTION RATE</span>
+                        <h2 id="res_retention" class="text-info">--</h2>
+                    </div>
+                    <div class="col-4 border-end border-secondary">
+                        <span class="text-label">AVG LIFESPAN</span>
+                        <h2 id="res_lifespan" class="text-white">--</h2>
+                    </div>
+                    <div class="col-4">
+                        <span class="text-label">TOTAL CHURN</span>
+                        <h2 id="res_churn" class="text-danger">--</h2>
+                    </div>
+                </div>
+
+                <div id="analyticsReport" style="display: none;">
+                    
+                    <div class="report-section">
+                        <img id="img_plot1" class="report-img">
+                        <div id="insight_plot1" class="insight-box"></div>
+                    </div>
+                    
+                    <div class="report-section">
+                        <img id="img_plot2" class="report-img">
+                        <div id="insight_plot2" class="insight-box"></div>
+                    </div>
+
+                    <div class="report-section">
+                        <img id="img_plot3" class="report-img">
+                        <div id="insight_plot3" class="insight-box"></div>
+                    </div>
+                    
+                    <div class="report-section mt-4 border-top border-info pt-4">
+                        <h5 class="text-success fw-bold mb-3">🟢 ML Cohorts: The Survivors</h5>
+                        <p class="text-secondary small mb-3">Clustering the agents who remained active on Day 30.</p>
+                        <div id="ml_survivors" class="row mb-5"></div>
+
+                        <h5 class="text-danger fw-bold mb-3">🔴 ML Cohorts: The Churned</h5>
+                        <p class="text-secondary small mb-3">Clustering the agents who uninstalled the simulation.</p>
+                        <div id="ml_churned" class="row"></div>
+                    </div>
+                </div>
+                
+                <div id="waitingState" class="text-center p-5 opacity-50">
+                    <p>Adjust parameters and click "RUN SYSTEM TEST" to generate the Analytics Report.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
