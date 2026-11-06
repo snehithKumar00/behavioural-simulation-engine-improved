@@ -12,7 +12,6 @@ class SimulationEngine:
         active_history = []
         daily_reasons = []
         
-        # Extracted tensors for LSTM
         X_data = []
         y_labels = []
 
@@ -36,14 +35,11 @@ class SimulationEngine:
         total_b_churn = sum(d['Boredom'] for d in daily_reasons)
         total_p_churn = sum(d['Personal'] for d in daily_reasons)
         
-        # Populate deep learning tensors
         for p in players:
-            # Only use endogenous churners or survivors to prevent noise contamination
             if p.quit_reason != "Personal":
-                # Pad sequences to 30 days if player quit early to maintain tensor shape
-                padded_history = p.history + [[0, 0, 0, 0]] * (30 - len(p.history))
+                # Pad early exits with -99.0 for the Masking layer
+                padded_history = p.history + [[-99.0, -99.0, -99.0, -99.0]] * (30 - len(p.history))
                 X_data.append(padded_history)
-                # 1 if they churned due to game mechanics, 0 if they survived
                 y_labels.append(1 if p.quit_reason in ["Frustration", "Boredom"] else 0)
 
         return {

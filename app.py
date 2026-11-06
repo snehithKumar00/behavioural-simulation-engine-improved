@@ -1,11 +1,24 @@
+import os
 from flask import Flask, render_template, request, jsonify
 import io, base64, matplotlib
+import numpy as np
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from engine import SimulationEngine
 from ml_analytics import analyze_player_archetypes
 
+# Suppress TensorFlow logging to keep the Flask console clean
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+from tensorflow.keras.models import load_model
+
 app = Flask(__name__)
+
+# Load the LSTM model globally if it has been trained
+MODEL_PATH = 'churn_lstm_model.h5'
+lstm_model = None
+if os.path.exists(MODEL_PATH):
+    lstm_model = load_model(MODEL_PATH)
+    print("LSTM Model loaded successfully for live inferences.")
 
 def plot_to_base64(fig):
     img = io.BytesIO()
@@ -68,20 +81,28 @@ def run_simulation():
         p1, p2, p3 = generate_visuals(res)
         
         survivors = [p for p in res['raw_players'] if p.is_active]
-        
-        # We pass ALL inactive players to ML so the total numbers match the UI exactly
         churned = [p for p in res['raw_players'] if not p.is_active]
         
-        arch_survivors = analyze_player_archetypes(survivors, num_clusters=3, group_type="survivors")
+        # Pass base difficulty to dynamically scale the archetypes
+        base_diff = float(config.get('difficulty', 40))
+        arch_survivors = analyze_player_archetypes(survivors, base_diff, num_clusters=3, group_type="survivors")
         
         arch_churned = []
         if len(churned) >= 3:
-            arch_churned = analyze_player_archetypes(churned, num_clusters=3, group_type="churned")
+            arch_churned = analyze_player_archetypes(churned, base_diff, num_clusters=3, group_type="churned")
+
+        # Execute Deep Learning Inference
+        risk_score = "--"
+        if lstm_model is not None and len(res['X_tensor']) > 0:
+            predictions = lstm_model.predict(res['X_tensor'], verbose=0)
+            avg_risk = float(np.mean(predictions)) * 100
+            risk_score = f"{round(avg_risk, 1)}%"
 
         return jsonify({
             'retention_rate': res['retention_rate'],
             'avg_lifespan': f"{res['avg_lifespan']}d",
             'total_churn': res['total_churn'],
+            'lstm_risk': risk_score,
             'total_f_churn': res['total_f_churn'],
             'total_b_churn': res['total_b_churn'],
             'total_p_churn': res['total_p_churn'],

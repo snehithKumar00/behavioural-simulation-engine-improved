@@ -14,7 +14,7 @@ class Player:
         self.is_active = True
         self.day_quit = 30
         self.quit_reason = "Survived"
-        self.history = [] # Stores daily time-series data for LSTM
+        self.history = []
 
     def update_state(self, system_config, day):
         if not self.is_active: return
@@ -38,7 +38,6 @@ class Player:
         if success:
             self.skill += self.learning_rate
             
-        # Log daily metrics for LSTM tensor (Skill, Difficulty Gap, Frustration, Boredom)
         self.history.append([self.skill, level_gap, self.frustration, self.boredom])
 
         if np.random.random() < 0.003: 

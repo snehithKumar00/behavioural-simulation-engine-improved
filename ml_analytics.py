@@ -5,7 +5,7 @@ import warnings
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
-def analyze_player_archetypes(players, num_clusters=3, group_type="survivors"):
+def analyze_player_archetypes(players, base_difficulty, num_clusters=3, group_type="survivors"):
     if len(players) < num_clusters:
         return []
 
@@ -30,14 +30,12 @@ def analyze_player_archetypes(players, num_clusters=3, group_type="survivors"):
         dominant_emotion = "Frustration" if c_frust > c_bored else "Boredom"
         
         if group_type == "survivors":
-            if c_skill > 55 and c_frust <= 15: name = "Flow-State Masters"
+            # Dynamic threshold: if skill is significantly higher than starting difficulty
+            if c_skill > (base_difficulty + 15) and c_frust <= 15: name = "Flow-State Masters"
             elif c_frust > 15: name = "Struggling Grinders"
             elif c_bored > 15: name = "Bored Veterans"
             else: name = "The Casual Core"
-        else: # group_type == "churned"
-            
-            # Meaningful Name Fix: If they have low frustration and low boredom,
-            # they didn't play long enough. They are just highly impatient players.
+        else: 
             if c_frust < 12 and c_bored < 12: 
                 name = "Early Abandoners"
                 dominant_emotion = "Low Patience"
